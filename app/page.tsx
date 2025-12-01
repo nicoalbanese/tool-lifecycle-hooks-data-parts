@@ -20,18 +20,18 @@ export default function Chat() {
   if (error) return <div>{error.message}</div>;
 
   return (
-    <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
+    <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch bg-white dark:bg-zinc-950 min-h-screen">
       <div className="space-y-4">
         {messages.map((m) => (
           <div key={m.id}>
-            <div className="font-bold">{m.role}</div>
+            <div className="font-bold text-zinc-900 dark:text-zinc-100">{m.role}</div>
             {m.parts.map((p, i) => {
               switch (p.type) {
                 case "text":
                   return (
                     <div key={i} className="whitespace-pre-wrap">
                       <div>
-                        <p>{p.text}</p>
+                        <p className="text-zinc-800 dark:text-zinc-200">{p.text}</p>
                       </div>
                     </div>
                   );
@@ -58,7 +58,7 @@ export default function Chat() {
                     return (
                       <div key={i} className="whitespace-pre-wrap">
                         <div>
-                          <div className="text-sm text-zinc-500">
+                          <div className="text-sm text-zinc-500 dark:text-zinc-400">
                             Tool call: {toolName}
                           </div>
                         </div>
@@ -82,7 +82,7 @@ export default function Chat() {
         }}
       >
         <input
-          className="fixed bottom-0 w-full max-w-md p-2 mb-8 border border-zinc-300 rounded shadow-xl"
+          className="fixed bottom-0 w-full max-w-md p-2 mb-8 border border-zinc-300 dark:border-zinc-700 rounded shadow-xl bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500"
           value={input}
           placeholder="Say something..."
           onChange={(e) => setInput(e.currentTarget.value)}
