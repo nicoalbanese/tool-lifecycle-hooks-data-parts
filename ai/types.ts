@@ -1,8 +1,15 @@
-import { InferUITools, UIDataTypes, UIMessage } from "ai";
+import { InferUITools, UIMessage } from "ai";
 import { tools } from "./tools";
+
+export type MyDataTypes = {
+  weatherToolMetadata: {
+    toolCallId: string;
+    location: string;
+  };
+};
 
 export type MyUIMessage = UIMessage<
   never,
-  UIDataTypes,
-  InferUITools<typeof tools>
+  MyDataTypes,
+  InferUITools<ReturnType<typeof tools>>
 >;

@@ -1,21 +1,26 @@
 import { tools } from "@/ai/tools";
-import { UIToolInvocation } from "ai";
+import { MyDataTypes } from "@/ai/types";
+import { DataUIPart, UIToolInvocation } from "ai";
 
 interface WeatherToolViewProps {
-  invocation: UIToolInvocation<(typeof tools)["weather"]>;
+  invocation: UIToolInvocation<ReturnType<typeof tools>["weather"]>;
   addToolApprovalResponse: (response: {
     id: string;
     approved: boolean;
   }) => void;
+  metadata?: DataUIPart<MyDataTypes> & { type: "data-weatherToolMetadata" };
 }
 
 export function WeatherToolView({
   invocation,
   addToolApprovalResponse,
+  metadata,
 }: WeatherToolViewProps) {
   if (invocation.state === "approval-requested") {
     return (
       <div className="border border-zinc-300 rounded p-4 space-y-2">
+        <pre>{JSON.stringify(metadata, null, 2)}</pre>
+
         <p className="text-sm">
           Can I retrieve the weather for location ID:{" "}
           {invocation.input.locationId}?

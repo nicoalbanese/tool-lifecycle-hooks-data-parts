@@ -12,7 +12,7 @@ import { MyUIMessage } from "@/ai/types";
 
 export default function Chat() {
   const [input, setInput] = useState("");
-  const { messages, error, sendMessage, addToolApprovalResponse } =
+  const { messages, error, sendMessage, addToolApprovalResponse, status } =
     useChat<MyUIMessage>({
       sendAutomaticallyWhen:
         lastAssistantMessageIsCompleteWithApprovalResponses,
@@ -36,9 +36,15 @@ export default function Chat() {
                     </div>
                   );
                 case "tool-weather":
+                  const metadata = m.parts
+                    .filter((part) => part.type === "data-weatherToolMetadata")
+                    .find(
+                      (dataPart) => dataPart.data.toolCallId === p.toolCallId,
+                    );
                   return (
                     <div key={i} className="my-2">
                       <WeatherToolView
+                        metadata={metadata}
                         invocation={p}
                         addToolApprovalResponse={addToolApprovalResponse}
                       />
@@ -69,8 +75,10 @@ export default function Chat() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          sendMessage({ text: input });
-          setInput("");
+          if (status === "ready") {
+            sendMessage({ text: input });
+            setInput("");
+          }
         }}
       >
         <input

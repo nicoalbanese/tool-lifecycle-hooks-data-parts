@@ -1,14 +1,31 @@
-import { tool } from "ai";
+import { tool, UIMessage, UIMessageStreamWriter } from "ai";
 import { z } from "zod";
-import { getLocation } from "./utils";
+import { getLocation, locationMap } from "./utils";
+import { MyDataTypes } from "./types";
 
-export const tools = {
+export const tools = (
+  writer: UIMessageStreamWriter<UIMessage<never, MyDataTypes>>,
+) => ({
   weather: tool({
-    description: "Get the weather in a location",
+    description: "Get the weather in a location.",
     inputSchema: z.object({
-      locationId: z.string().describe("The location to get the weather for"),
+      locationId: z
+        .string()
+        .describe(
+          "The id for the location to get the weather for. Possible IDs: " +
+            JSON.stringify(locationMap),
+        ),
     }),
     needsApproval: true,
+    onInputAvailable: async ({ toolCallId, input }) => {
+      writer.write({
+        type: "data-weatherToolMetadata",
+        data: {
+          location: await getLocation(input.locationId),
+          toolCallId,
+        },
+      });
+    },
     execute: async ({ locationId }) => {
       const location = await getLocation(locationId);
       return {
@@ -17,4 +34,4 @@ export const tools = {
       };
     },
   }),
-};
+});
