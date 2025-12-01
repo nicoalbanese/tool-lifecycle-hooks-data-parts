@@ -2,6 +2,8 @@
 
 Next.js project demonstrating AI SDK tool lifecycle hooks and data parts.
 
+Answers [this question](https://x.com/alexdotjs/status/1995463585837846609?s=20).
+
 ## Setup
 
 Install dependencies:
